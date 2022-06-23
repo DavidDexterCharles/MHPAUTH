@@ -31,15 +31,44 @@
 ##### TWO(2) ResponseObj Example :
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/ResponseObjInUse.png)
 
-## Project Structure
 
-## Quick Setup (library|SampleApp)
+# Option (A) - Quick Setup (library|SampleApp)
+*See* **Option (B)** for detail setup **or** continue here to skip steps:
+
 The following steps detail quick setup using library containing all node modules installed along with already build commands and dist file executed:
 
-- 
+1  Details of Quick Setup 
+   - Steps Already Completed for **library** : Every step that would have involved running a node "npm command" in   **library** folder[\MHPAUTH\library](https://github.com/DavidDexterCharles/MHPAUTH/tree/Master_Backup/library) has already been completed {see **Detail Setup** below for more info}. 
 
-## Detail Setup (library-WireFrame|SampleApp-WireFrame)
-Note: *this setup should bbe carried out using library-WireFrame SampleApp-WireFrame removing '-WireFrame' from the folder name. The node modules for SampleApp and library were included already in the git push for the purpose/intention of providing a quick setup alternative.*
+2 Remaining steps for  **library** : 
+  - Navigate to *\MHPAUTH\library\mhpauthDB*. In this directory there is also a "[SetupDataBase.sql](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauthDB/SetupDataBase.sql)" execute this script on your MySql server (possibly through MsqlWorkBench or phpMyadmin). three(3) database schmeas: "myhealthpassdev", "myhealthpasstest", and "myhealthpass" will be generated and each of them will contain a single table called user.
+
+  - Next navigate to *\MHPAUTH\library\mhpauthDB\config* open the `config.json` file and change the "username" and "password" to use your local database info. Example: `config.json `:
+```json
+{
+ "development": {
+      "username": "YourUserName",
+      "password": "YourPassword",
+      "database": "MyHealthPassdev",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    .......
+```
+3 Open command prompt as administrator, change directory to *\MHPAUTH\SampleApp* and execute the following command:
+ 
+ * `npm link ../library/mhpauth`
+
+4 Other *Commands:* that can be ran in *\MHPAUTH\SampleApp* for testing app and exploring functionality: 
+    
+- "`npm start`" (OR)  "`npm run dev-env`" starts the nodemon server with `main.ts` as the entry point script. All files within this *SampleApp* directory when edited will trigger a re-run of `main.ts` while nodemon is executing. Note that the default database used when executing the `npm start` (OR)  "`npm run dev-env`" command is "**myhealthpassdev**". 
+
+- The other commands for executeing `main.ts` on the test database "**myhealthpasstest**" and dummy-production database "**myhealthpass**". are "`npm run test-env`" and "`npm run prod-env`" respectively.
+
+- "`npm run test` will run the tests located in the test folder at *\MHPAUTH\SampleApp\test*. Example `AuthController.test.ts`. The test were developed using [JEST](https://jestjs.io/docs/getting-started) a JavaScript testing framework. The test by default are set to run on the test version of the database "**myhealthpasstest**". 
+
+# Option (B) - Detail Setup (library-WireFrame|SampleApp-WireFrame)
+Note: *this setup should be carried out using library-WireFrame SampleApp-WireFrame removing '-WireFrame' from the folder name. The node modules for SampleApp and library were included already in the git push for the purpose/intention of providing a quick setup alternative **Option (A)**.*
 
 The following instructions contains added details on setup steps. These steps can be done using library-Wireframe which does not include preinstalled node modules or builds like the dist folder which is required for the module to be linked and used as a standalone library by other aplication SamlpleApp. 
 
@@ -50,7 +79,7 @@ The following instructions contains added details on setup steps. These steps ca
 * `npm install`
 * `npm run build` [generates the `**dist**` folder within *\MHPAUTH\library\mhpauth*]
 
-3 Navigate in the same terminal change directory to *\MHPAUTH\library\mhpauthDB*, do the following steps:
+3 Via the same terminal change directory to *\MHPAUTH\library\mhpauthDB*, do the following steps:
 * Execute command `npm install`
 * In this directory there is also a "[SetupDataBase.sql](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauthDB/SetupDataBase.sql)" execute this script on your MySql server (possibly through MsqlWorkBench). three(3) database schmeas: "myhealthpassdev", "myhealthpasstest", and "myhealthpass" will be generated and each of them will contain a single table called user.
 ```sql
@@ -107,7 +136,9 @@ CREATE TABLE `user` (
     "prodenv":"env NODE_ENV=production nodemon main.js"    
   },
 ```
+# Brief on `.env`
 
+Note: In  both SampleApp [*\MHPAUTH\SampleApp*](https://github.com/DavidDexterCharles/MHPAUTH/tree/master/SampleApp) and mhpauth [MHPAUTH\library\mhpauth](https://github.com/DavidDexterCharles/MHPAUTH/tree/master/library/mhpauth) , the file [`.env`](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/SampleApp/.env) is used. They both store the generated secrety key. Apart from the encryption key all other private info present that was present in .env. were removed. The .env file was kept in the reepo for eas of demo and runnig but this should be avoided.
 
 # List of Assumptions and descisions made for design
 1) Username is equivalent to the user email, this was done because account details can include firstname, lastname, etc. It is expected that the user name should be unique.
