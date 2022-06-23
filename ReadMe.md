@@ -27,7 +27,7 @@ The following instructions contains added details on setup steps. These steps ca
 
 3 Navigate in the same terminal change directory to *\MHPAUTH\library\mhpauthDB*, do the following steps:
 * Execute command `npm install`
-* In this directory there is also a "SetupDataBase.sql" execute this script in your MySql database. three(3) database schmeas: "myhealthpassdev", "myhealthpasstest", and "myhealthpass" will be generated and each of them will contain a single table called user.
+* In this directory there is also a "[SetupDataBase.sql](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauthDB/SetupDataBase.sql)" execute this script in your MySql database. three(3) database schmeas: "myhealthpassdev", "myhealthpasstest", and "myhealthpass" will be generated and each of them will contain a single table called user.
 ```sql
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -84,9 +84,64 @@ CREATE TABLE `user` (
 ```
 
 
+
+
+# Outputs/Deliverables
+
+ 
+ ## Describe the **data and object model** to support the **authentication** and **authorization** requirements. 
+ 
+ ### **Data Transfer Objects** 
+ 
+ - Data Transfer Object (DTO) [UserRegistrationDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L31)
+    - A DTO is an object for carrying data between processes. One main advantage of DTO is that they can help hide implementation details of Domain Objects(DO). The DTOS  developed for this solution are at [*\MHPAUTH\library\mhpauth\src\services\DTOS\APIDTO.ts*](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauth/src/services/DTOS/APIDTO.ts).
+    - A library called [class-validator](https://www.npmjs.com/package/class-validator) was used to apply strict rules to fields of the dto. Using class-validator along with helper method [isValidDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L5) at APIDTO.ts allowed for validation of user registration data being sent to the registration function of the library.
+    -  [UserRegistrationDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L31) : This DTO is what is sent by the user upon registration and is accepeted as a parameter by the [register](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L136) function in AuthController. The implementation details it hides includes:
+        - id 
+        - createdat
+        - accessfailedcount- increments each time for every failed login up to 3 times then locks user account. The attribute lockoutend in the database is then set to 20mins in the future.
+        - lockoutend -this attribute is set to 20 mins in the future when max failed logging attempts occured. If the user trys to log in they will be rejected until the time has elapsed
+        - emailconfirmed
+        
+    - [UserRegistrationDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L31) also adds feature for user password confirmation via the passwordconfirm field.
+
+- Data Transfer Object (DTO) [UserResponseDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L86) 
+    - the next dto created was a user response object that hides details such as user password. Validation isn't really done on this object as it is being rapped into another object called [ResponseObj](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L73). 
+    - [UserResponseDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L86)  also contains details of the JWT token which is an authorization token generated upon successful login (using the [login function](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L13) of the library) and is used and passed to the [authenticate function](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L192) to authenticate subsequent requests of an authorized user.
+- Data Transfer Object (DTO) - About [ResponseObj](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L73)
+    -  The purpose of the  [ResponseObj](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L73) is to provide a standard and consistent response/return object to the developer using the api. This  object should **NEVER** be sent to a client but is strictly for providing additional helpful details to the developer. It is expected that only the [result]() field of the [ResponseObj](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L73) object is forwarded or seen by the client. Upon success the result field will contain a [UserRegistrationDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L31), upon failure due to authentication,DTO validation, etc. the [result]() field of [ResponseObj]() would be empty and the  [errors] field would be populated with useful details about the error which will assist the developer in utilizing the API.
+    - The object upon successful reseponse would actual store a [UserResponseDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L86)  in its results fileds, its  IsSuccess value would be set to true and any other message details regarding the successful response would be avaailable in the message field. The errors field would be empty if the response was successful. 
+    - If the an error does occur whther its due to data not found in the database or a DTO did not pass all its validation checks. Then the errors field of [UserResponseDTO](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L86) will get populated with details of the error and the results field would be empty. 
+    
+    - The helper methods used for generating and returning approriate response object to the developer are [successResponse](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/SampleApp/node_modules/mhpauth/src/services/DTOS/APIDTO.ts#L23) andd [failureResponse](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/SampleApp/node_modules/mhpauth/src/services/DTOS/APIDTO.ts#L15). Also all the major methods of the [AuthController](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L11) which includes [login](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L13),[register](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L136), and [authenticate](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L192) all return [ResponseObj](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/DTOS/APIDTO.ts#L73)
+
+### **Data Transfer Objects** 
+
+1 In developing this solution the tech stack used included MySQL and Nodejs. NodeJS is a backend javascript runtime that allows developers to develop applications, services, aand libraries using javascrit/typescript. 
+
+2
+
+The progrmming language comprised mianly of typescript and javascript. Though NodeJs was used as the server side progr
+
+2
+
+## The 
+
+
+
+
+# other
+**Solution Implemented:** The purpose of this library is to provide a develper with a reusable and portable solution for authenticationa and authorization. 
+
+In developing this solution the following assumptions and reasons for those assumptions were made:
+
+
+have been developed to be used by another developer that wishes to have out of the box authorization and authenti
+
+1 
+
+
+
 ## Library Interface
-
-
-
 ## Project Structure
 
