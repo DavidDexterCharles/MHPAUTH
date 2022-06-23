@@ -131,9 +131,9 @@ CREATE TABLE `user` (
  "scripts": {
     "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
     "start": "env NODE_ENV=development nodemon main.ts",
-    "devenv":"env NODE_ENV=development nodemon main.js",
-    "testenv":"env NODE_ENV=test nodemon main.js",
-    "prodenv":"env NODE_ENV=production nodemon main.js"    
+    "devenv":"env NODE_ENV=development nodemon main.ts",
+    "testenv":"env NODE_ENV=test nodemon main.ts",
+    "prodenv":"env NODE_ENV=production nodemon main.ts"    
   },
 ```
 # Brief on `.env`
@@ -216,19 +216,29 @@ Command Listing for quick reference :
  "scripts": {
     "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
     "start": "env NODE_ENV=development nodemon main.ts",
-    "devenv":"env NODE_ENV=development nodemon main.js",
-    "testenv":"env NODE_ENV=test nodemon main.js",
-    "prodenv":"env NODE_ENV=production nodemon main.js"    
+    "devenv":"env NODE_ENV=development nodemon main.ts",
+    "testenv":"env NODE_ENV=test nodemon main.ts",
+    "prodenv":"env NODE_ENV=production nodemon main.ts"    
   },
 ```
 
 ## Running main.ts
 
-The entry point for *SampleApp* is `main.ts`. The purpose of main.ts is for  demonstrating how a sperate stand alone app can import and utilize fetures of the *mhpauth* library.
+The entry point for *SampleApp* is `main.ts`. The purpose of main.ts is for  demonstrating how a sperate stand alone app can import and utilize fetures of the **mhpauth** library note library follder also contains **mhpauthDB** this seperation was done to give the developer a means to easily add there environment specific database configurations.
 
-Library file structure:
-#### UserResponeDTO
+#### Library file structure:
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/mhpAuthLibrary.PNG)
 
-
+The Library file structure contains
+- *mhpauth* : this is the actual library(typescript module) that provides Access to the [following](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauth/src/services/index.ts) classes. The main class within the scope of feature requests is AuthController and is what will be used the most regarding testing the *mhpauth* module:
+```js
+export { AuthController } from './controllers/AuthController';
+export { userRepository } from './repositories/userRepository';
+export { UserRegistrationDTO,
+         UserLogInDTO,ResponseObj,
+         UserResponseDTO,
+         successResponse,
+         failureResponse,isValidDTO } from './DTOS/APIDTO';
+```
+- 
 ## Running the tests
