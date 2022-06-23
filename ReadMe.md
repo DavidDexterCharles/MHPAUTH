@@ -124,7 +124,7 @@ CREATE TABLE `user` (
 3) [JWT (JSON Web Token)](https://jwt.io/introduction) was used for generating authentication tokens and were given an expiery time of 1 hour. Also only 
 JWT: is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. [The secret key](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L85) required by JWT was stored on the computer system in a .env file. The file may have been included in this git repo for easy demo purposes but all real sensitive info have been removed from it. This file should never be made public in real practice. Finally minimum data is added to the JWT token which were "email, firstname, lastname, and id".
 
-4) [The authenticate(token)](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L86) function accepts a token. The token based authentication was implemented using JWT whh 
+4) [The authenticate(token)](https://github.com/DavidDexterCharles/MHPAUTH/blob/c1b85ac4df2371473b1a7ed4a444d0dd4378b3b6/library/mhpauth/src/services/controllers/AuthController.ts#L86) function accepts a token. The token based authentication was implemented using JWT 
 
 
 
