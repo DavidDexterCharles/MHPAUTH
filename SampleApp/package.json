@@ -9,9 +9,9 @@
   "scripts": {
     "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
     "start": "env NODE_ENV=development nodemon main.ts",
-    "dev-env":"env NODE_ENV=development nodemon main.ts",
-    "test-env":"env NODE_ENV=test nodemon main.ts",
-    "prod-env":"env NODE_ENV=production nodemon main.ts"    
+    "dev-env": "env NODE_ENV=development nodemon main.ts",
+    "test-env": "env NODE_ENV=test nodemon main.ts",
+    "prod-env": "env NODE_ENV=production nodemon main.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/jest": "^28.1.2",
     "@types/node": "^14.14.7",
+    "faker": "^6.6.6",
     "jest": "^28.1.1",
     "ts-jest": "^28.0.5",
     "typescript": "^4.7.4"

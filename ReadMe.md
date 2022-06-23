@@ -221,6 +221,7 @@ Command Listing for quick reference :
     "prodenv":"env NODE_ENV=production nodemon main.ts"    
   },
 ```
+## Regarding running and testing all commands should be assumed to have been executed in the following directory 
 
 ## Running main.ts
 
@@ -242,3 +243,5 @@ export { UserRegistrationDTO,
 ```
 - 
 ## Running the tests
+
+- When `npm run test` is executed the following command "`env NODE_ENV=test jest --coverage --watchAll --verbose`" is run that tells jest that the environment we are testing in is a test environment ( which will cause the tests to read/write to the test database :myhealthpasstest)

@@ -1,17 +1,17 @@
-import {AuthController}  from 'mhpauth';
+import {AuthController,userRepository}  from 'mhpauth';
 // const AuthController = require("mhpauth");
 
+  beforeAll(() => {
+    console.log("apples");
+  });
 
-  describe('My Stack', () => {
+  describe('Test Registration', () => {
     let stack:any="";
 
   
     beforeEach(() => {
       stack = "ap";
-    //   const services = require('../src/index');
-   
-    //  var p = new Person("david t","c");
-    // console.log(p.getFullName());
+    
     });
   
     // it('is created empty', () => {
