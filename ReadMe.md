@@ -138,7 +138,7 @@ CREATE TABLE `user` (
 ```
 # Brief on `.env`
 
-Note: In  both SampleApp [*\MHPAUTH\SampleApp*](https://github.com/DavidDexterCharles/MHPAUTH/tree/master/SampleApp) and mhpauth [MHPAUTH\library\mhpauth](https://github.com/DavidDexterCharles/MHPAUTH/tree/master/library/mhpauth) , the file [`.env`](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/SampleApp/.env) is used. They both store the generated secrety key. Apart from the encryption key all other private info present that was present in .env. were removed. The .env file was kept in the reepo for eas of demo and runnig but this should be avoided.
+Note: In  both SampleApp [*\MHPAUTH\SampleApp*](https://github.com/DavidDexterCharles/MHPAUTH/tree/master/SampleApp) and mhpauth [MHPAUTH\library\mhpauth](https://github.com/DavidDexterCharles/MHPAUTH/tree/master/library/mhpauth) , the file [`.env`](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/SampleApp/.env) is used. They both store the generated secrety key. Apart from the encryption key all other private info present that was present in .env. were removed. The .env file was kept in the repo for ease of demo and would be excluded and added to the .gitignore file otherwise.
 
 # List of Assumptions and descisions made for design
 1) Username is equivalent to the user email, this was done because account details can include firstname, lastname, etc. It is expected that the user name should be unique.
@@ -197,3 +197,38 @@ In simplest terms a DAO is just an object that execute SQL and return results in
 
 
 # App Testing and Unit Tests with Jest
+
+## Background
+
+To run or test the application  all commands previously mentioned see: ([Option B -Commands](https://github.com/DavidDexterCharles/MHPAUTH/tree/Master_Backup#commands)) are to be executed in the **\MHPAUTH\SampleApp** directory.
+
+Command Listing for quick reference :
+#### *Commands:*
+    
+- "`npm start`" (OR)  "`npm run dev-env`" starts the nodemon server with `main.ts` as the entry point script. All files within this *SampleApp* directory when edited will trigger a re-run of `main.ts` while nodemon is executing. Note that the default database used when executing the `npm start` (OR)  "`npm run dev-env`" command is "**myhealthpassdev**". 
+
+- The other commands for executeing `main.ts` on the test database "**myhealthpasstest**" and dummy-production database "**myhealthpass**". are "`npm run test-env`" and "`npm run prod-env`" respectively.
+
+- "`npm run test` will run the tests located in the test folder at *\MHPAUTH\SampleApp\test*. Example `AuthController.test.ts`. The test were developed using [JEST](https://jestjs.io/docs/getting-started) a JavaScript testing framework. The test by default are set to run on the test version of the database "**myhealthpasstest**". 
+
+- Details on how these commands are executed can be found in the package.json file within **\MHPAUTH\SampleApp** . `package.json`:
+```json
+ "scripts": {
+    "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
+    "start": "env NODE_ENV=development nodemon main.ts",
+    "devenv":"env NODE_ENV=development nodemon main.js",
+    "testenv":"env NODE_ENV=test nodemon main.js",
+    "prodenv":"env NODE_ENV=production nodemon main.js"    
+  },
+```
+
+## Running main.ts
+
+The entry point for *SampleApp* is `main.ts`. The purpose of main.ts is for  demonstrating how a sperate stand alone app can import and utilize fetures of the *mhpauth* library.
+
+Library file structure:
+#### UserResponeDTO
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/mhpAuthLibrary.PNG)
+
+
+## Running the tests
