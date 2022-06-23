@@ -1,4 +1,4 @@
-import {Person,AuthController}  from './index'
+import {AuthController}  from './index'
 import {UserRegistrationDTO,UserLogInDTO} from './DTOS/APIDTO';
 
  //var p= new Person("David","Charles");
