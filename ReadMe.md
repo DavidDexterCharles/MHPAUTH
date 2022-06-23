@@ -11,7 +11,8 @@
     - `nvm use 16.15.1`
 
 ## Library Interface
-![Alt text](gitimages\FinalInterface.PNG?raw=true "Title")
+
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/FinalInterface.PNG)
 
 ### Data Transfer Objeccts DTOs:
 
