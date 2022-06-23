@@ -248,4 +248,4 @@ export { UserRegistrationDTO,
 
 - Sample Test Runs Output Below:
 
-![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG.PNG)
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)
