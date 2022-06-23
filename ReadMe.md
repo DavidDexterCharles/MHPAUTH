@@ -10,6 +10,20 @@
     - ``nvm ls``
     - `nvm use 16.15.1`
 
+### Main Overview Library Code [AuthController .ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauth/src/services/controllers/AuthController.ts)
+
+ 
+ The bulk of the library code is stored at [AuthController.ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauth/src/services/controllers/AuthController.ts) illustrated in below image. The directory in the below image was set up so that when `npm run build` is executed in mhpauth, a dist folder gets generated. At this point the mhpauth app becomes a module that can be published as an npm package to npm registry or consumed locally by running the command  `npm link ../library/mhpauth` . 
+ 
+ Other Note:
+ The functionality that is triggered when a user makes 3 failed consecutive attempts has been implemented with [implementation details at AuthController.ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/c82d9b9ce8fea2acb9b20cfb2224b6529b721eb4/library/mhpauth/src/services/controllers/AuthController.ts#L73) which contains all the functionality for the requested fetures. This feture was and can be tested in main.ts by calling the login function 3 times with an existing user using an incorrect password each time.  Iplementation details [here](https://github.com/DavidDexterCharles/MHPAUTH/blob/c82d9b9ce8fea2acb9b20cfb2224b6529b721eb4/library/mhpauth/src/services/controllers/AuthController.ts#L73)
+ 
+ I was able to test it manually by running the main.ts script with an existing user calling the login function multiple times with incorrect password. Initially I shortened the time to 1 minute for quicker testing. I have not yet added this test to AuthController.test.ts test suite.
+
+## Library **"mhpauth"** directory:
+
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/AuthControllerDirectory.PNG)
+
 ## Library Interface
 
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/FinalInterface.PNG)
@@ -221,7 +235,7 @@ Command Listing for quick reference :
     "prodenv":"env NODE_ENV=production nodemon main.ts"    
   },
 ```
-## Regarding running and testing all commands should be assumed to have been executed in the following directory 
+## Regarding running and testing, all commands should be assumed to have been executed in the following directory **\MHPAUTH\SampleApp**
 
 ## Running main.ts
 
@@ -246,6 +260,6 @@ export { UserRegistrationDTO,
 
 - When `npm run test` is executed the following command "`env NODE_ENV=test jest --coverage --watchAll --verbose`" is run that tells jest that the environment we are testing in is a test environment ( which will cause the tests to read/write to the test database :myhealthpasstest)
 
-- Sample Test Runs Output Below:
+- Sample Test Runs Output Below (note below results though test user lockout says to do , the functionality has been enabled in the authcontroller):
 
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)

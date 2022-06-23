@@ -73,7 +73,23 @@ describe('AuthController Functionality', () => {
     });
   });
   describe('Test User Lockout', () => {
-    it.todo('should lock existing user out after 3 failed login attempts');
+    // it('should Lock user Account', async () => 
+    // {
+    //   regResponse = await ac.authenticate(user.token);
+    //   expect(regResponse).toBeInstanceOf(ResponseObj);
+    //   expect(regResponse.IsSuccess).toBe(true);
+    //   expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
+    //   // console.log(user.token);
+    // });
+    test("should Lock user Account after 3 tries", () => {
+      const t = async () => {
+        // throw new TypeError();
+        regResponse = await ac.authenticate(user.token);
+        throw regResponse;
+      };
+      expect(t).toThrow(TypeError);
+    });
   });
+  
   
 });
