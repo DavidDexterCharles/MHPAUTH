@@ -1,0 +1,23 @@
+{
+    "development": {
+      "username": "david",
+      "password": "david",
+      "database": "MyHealthPassdev",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "test": {
+      "username": "david",
+      "password": "david",
+      "database": "MyHealthPasstest",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    },
+    "production": {
+      "username": "david",
+      "password": "david",
+      "database": "MyHealthPass",
+      "host": "127.0.0.1",
+      "dialect": "mysql"
+    }
+  }

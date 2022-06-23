@@ -1,0 +1,6 @@
+{
+    "watch": ["./src/services/*.ts","./src/"],
+    "execMap": {
+      "ts": "ts-node"
+    }
+  }
