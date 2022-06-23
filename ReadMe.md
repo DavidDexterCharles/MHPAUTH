@@ -17,19 +17,19 @@
 ### Data Transfer Objeccts DTOs:
 
 #### UserLoginDTO
-![Alt text](gitimages\UserLoginDTO.PNG "Title")
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/UserLoginDTO.PNG)
 
 #### UserRegistrationDTO
-![Alt text](gitimages\UserRegistrationDTO.PNG "Title")
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/UserRegistrationDTO.PNG)
 
 #### UserResponeDTO
-![Alt text](gitimages\UserResponeDTO.PNG "Title")
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/UserResponeDTO.PNG)
 
 #### ResponseObj
-![Alt text](gitimages\ResponseObj.PNG "Title")
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/ResponseObj.PNG)
 
 ##### TWO(2) ResponseObj Example :
-![Alt text](gitimages\ResponseObjInUse.png "Title")
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/ResponseObjInUse.png)
 
 ## Project Structure
 
