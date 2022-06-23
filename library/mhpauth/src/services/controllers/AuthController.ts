@@ -228,8 +228,4 @@ export class AuthController  {
             throw  failureResponse(err,'Invalid User');
         }
     }
-    public printLowerCase(message:string):string{
-        console.log(require.main.filename);
-        return message.toLowerCase() + require.main.filename.toString();
-    }
 }

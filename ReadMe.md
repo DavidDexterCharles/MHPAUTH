@@ -114,7 +114,7 @@ CREATE TABLE `user` (
  
  * `npm link ../library/mhpauth`
     
-    - ([Important Notice](https://github.com/npm/npm/issues/17287)) during late stages of development it was discoverd that an npm specific update caused the node_modules generated from the local *mhpauth* library to get overwritten when `npm install` is run in SampleApp. Details of the issue mentioned [Here](https://github.com/npm/npm/issues/17287). Please kindly avoid running npm install in SampleApp as the behaviour is still shakey and wasnt discovered until late stages.
+    - ([Important Notice](https://github.com/npm/npm/issues/17287)) during late stages of development it was discoverd that an npm specific update caused the node_modules generated from the local *mhpauth* library to get overwritten when `npm install` is run in SampleApp. Details of the issue mentioned [Here](https://github.com/npm/npm/issues/17287). Please kindly avoid running npm install in SampleApp as the behaviour is still shakey and wasnt discovered until late stages. If modules is unlinked due to npm install the command `npm link ../library/mhpauth` should be rerun in admin mode in the following directory **`\MHPAUTH\SampleApp`**. Please note I was also working on npm publishing the package but did not wish to go to far off scope.  Got the package to publish but the limitaton was packaging the orm with the package.
  
  5 **Exploring the commands** that can be executed within **`\MHPAUTH\SampleApp`** directory. The file `main.ts` imports the `AuthController` and other `classes/functions` which were used to implement the solution. `main.ts` can be edited to explore functionality regarding db updates, api validation checks, and other features supported by the library:
     
@@ -245,3 +245,7 @@ export { UserRegistrationDTO,
 ## Running the tests
 
 - When `npm run test` is executed the following command "`env NODE_ENV=test jest --coverage --watchAll --verbose`" is run that tells jest that the environment we are testing in is a test environment ( which will cause the tests to read/write to the test database :myhealthpasstest)
+
+- Sample Test Runs Output Below:
+
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG.PNG)
