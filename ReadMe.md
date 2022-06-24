@@ -46,8 +46,10 @@
  The requested behaviour that is triggered when a user makes 3 failed consecutive attempts, along with all the other requested requirements are at [AuthController.ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/c82d9b9ce8fea2acb9b20cfb2224b6529b721eb4/library/mhpauth/src/services/controllers/AuthController.ts#L73) . 
 
  It was deceided that illustration of the library and solution would be best demonstrated using a small test suite `AuthController.test.ts` and `SampleApp`.  SampleApp is a seperate directory from the library(mhpauth) with important codescripts being **main.ts** and **test\AuthController.test.ts** suite. This directory is what would be used to illustrate how the library mhpauth can be successfully imported into another project. The `AuthController.test.ts` is used to illustrate the features of the library while also providing automated tests. A snap shot of the tests done by the test suite is show below.
- 
+
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)
+
+Further details of how to run both the test suite and main.ts of the the SampleApp are greatly discussed in detail in Option (B) and Option (A) below. One note regarding running `AuthController.test.ts` is that on each run a new user is created based on a random  string, as will be revealed later on the test suite by default will run in a test environment which means that the results  of the tests would be available in the test database.
 
 # Option (A) - Quick Setup (library|SampleApp)
 *See* **Option (B)** for detail setup **or** continue here to skip steps:
