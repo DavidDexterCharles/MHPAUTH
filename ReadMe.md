@@ -49,7 +49,7 @@
 
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)
 
-Further details of how to run both the test suite and main.ts of the the SampleApp are greatly discussed in detail in Option (B) and Option (A) below. One note regarding running `AuthController.test.ts` is that on each run a new user is created based on a random  string, as will be revealed later on the test suite by default will run in a test environment which means that the results  of the tests would be available in the test database. As Illustrated in following screenshot.
+Further details of how to run both the test suite and main.ts of the the SampleApp are greatly discussed in detail in Option (B) and Option (A) below. One note regarding running `AuthController.test.ts` is that on each run a new user is created based on a random  string, as will be revealed later on the test suite by default will run in a test environment which means that the results  of the tests would be available in the test database. As Illustrated in following screenshot. On a side note the reason why accessedfailedcount allways appearing as 3 is because the last test in the suite simulates the 3 time unsuccessful loging event for a fake user.
 
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/TestDbPopulated.PNG)
 
