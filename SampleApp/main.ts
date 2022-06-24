@@ -61,19 +61,19 @@ regResponse.then(function(result){
     console.log(error); 
 });
 
-for(var i=1;i<=2;i++)
-{
-    console.log(`Login attempt: ${i}`); 
-    var uld = new UserLogInDTO();
-    uld.email=urd2.email;
-    uld.password=urd.password+"two fail login";
-    let acressult = authService.login(uld.email,uld.password);//ac.login2(uld);
-    acressult.then((ResponseObj)=>{
-        //console.log(ResponseObj.message); 
-        console.log("Login successful..."); 
+// for(var i=1;i<=2;i++)
+// {
+//     console.log(`Login attempt: ${i}`); 
+//     var uld = new UserLogInDTO();
+//     uld.email=urd2.email;
+//     uld.password=urd.password+"two fail login";
+//     let acressult = authService.login(uld.email,uld.password);//ac.login2(uld);
+//     acressult.then((ResponseObj)=>{
+//         //console.log(ResponseObj.message); 
+//         console.log("Login successful..."); 
 
-    }).catch((error)=>{
-        console.log("Failed Log in"); 
-            // console.log(error); 
-        });
-}
+//     }).catch((error)=>{
+//         console.log("Failed Log in"); 
+//             // console.log(error); 
+//         });
+// }

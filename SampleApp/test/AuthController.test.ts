@@ -102,6 +102,49 @@ describe('AuthController Functionality', () => {
                         console.log("---------------------------------------------------------------------------");
         })
   });
+  describe('Test User Lock Out', () => {
+        let ac:AuthController;//AuthController
+        ac = new AuthController();
+        it.only("Should lock after 3 attempts", async () => 
+        {
+            var  uld = new UserLogInDTO();
+            uld.email="user1@mail.com";
+            uld.password="SomePassword1234"; 
+            const throwingFunction = () => ac.login2(uld)
+            await throwingFunction().catch(error => 
+            {
+                console.log(error); 
+                expect(error).toBeInstanceOf(ResponseObj)
+                // expect(error.message).toMatch(new RegExp('Could not login user'))
+                // expect(error).toMatchObject(
+                // {
+                //     details: new RegExp('Invalid payload provided'),
+                // })
+            })
+        })
+  });
+  // describe('Test User Lockout', () => {
+  //   let ac:AuthController;//AuthController
+  //   ac = new AuthController();
+  //   var  uld = new UserLogInDTO();
+  //   uld.email="76david@mail.com";
+  //   uld.password="SomePassword1234"; 
+  //       it('throws an error when it is not possible to create an user', async () => {
+  //         const throwingFunction = () => ac.login2(uld)
+  //         const throwingFunction2 = () => ac.login2(uld)
+  //         // This is what prevents the test to succeed when the promise is resolved and not rejected
+  //         expect.assertions(3)
+      
+  //         await throwingFunction().catch(error => {
+  //             expect(error).toBeInstanceOf(Error)
+  //             expect(error.message).toMatch(new RegExp('Could not login user'))
+  //             expect(error).toMatchObject({
+  //                 details: new RegExp('Invalid payload provided'),
+  //             })
+  //         })
+  //     })
+  // });
+  
   // describe('Test User Lockout', () => {
   //   // it('should Lock user Account', async () => 
   //   // {
