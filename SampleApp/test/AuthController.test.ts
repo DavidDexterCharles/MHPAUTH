@@ -1,45 +1,52 @@
 import {AuthController,UserRegistrationDTO,userRepository,ResponseObj,UserResponseDTO, UserLogInDTO}  from 'mhpauth';
 
-describe('AuthController Functionality', () => {
-  
-  let ac:AuthController;//AuthController
-  let ur:any;//userRepository
-  let user:UserResponseDTO;
-  let urd:UserRegistrationDTO;//UserRegistrationDTO
-  let regResponse:ResponseObj;//UserRegistrationDTO
+let ur:any;//userRepository
   beforeAll(async () => { // clean user table before run 
     ur = new userRepository();
     await ur.deleteAllusers();
-    
-    //test with one user-- wasnt sure how deep I should go regarding writting unit tests
-    urd =new UserRegistrationDTO();
-    urd.email="user1@mail.com";
-    urd.firstname="f1";
-    urd.lastname="l1"; 
-    urd.password="SomePassword123";
-    urd.passwordconfirm="SomePassword123";
-    urd.phone="123-4562";
-
     });
 
   afterAll(async () => {   // clean user table after run 
     ur = new userRepository();
     await ur.deleteAllusers();
   });
+
+describe('AuthController Functionality', () => {
   
-  beforeEach(() => {
-      ac = new AuthController();
-      regResponse = new ResponseObj();
-  });
+  // let ac:AuthController;//AuthController
+ 
+  let shared_user:UserResponseDTO;
+
+  // let regResponse:ResponseObj;//UserRegistrationDTO
+
+  
+  
+  // beforeEach(() => {
+  //     ac = new AuthController();
+  //     regResponse = new ResponseObj();
+  // });
 
   describe('Test Registration', () => {
     it('should register new user', async () => 
     {
+      let ac:AuthController;//AuthController
+      let regResponse:ResponseObj;
+      let urd:UserRegistrationDTO;//UserRegistrationDTO
+
+      ac = new AuthController();
+      //test with one user-- wasnt sure how deep I should go regarding writting unit tests
+      urd =new UserRegistrationDTO();
+      urd.email="user1@mail.com";
+      urd.firstname="f1";
+      urd.lastname="l1"; 
+      urd.password="SomePassword123";
+      urd.passwordconfirm="SomePassword123";
+      urd.phone="123-4562";
       regResponse = await ac.register(urd); 
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.IsSuccess).toBe(true);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);
-      user=regResponse.result.UserResponseDTO;
+      shared_user=regResponse.result.UserResponseDTO;
       // expect(regResponse.).toBeInstanceOf(ResponseObj);//should pass
       // expect(regResponse.).toBeInstanceOf(ResponseObj);//should pass
 
@@ -52,44 +59,67 @@ describe('AuthController Functionality', () => {
   describe('Test Login', () => {
     it('should login new user', async () => 
     {
+      let ac:AuthController;//AuthController
+      let regResponse:ResponseObj;
+      let urd:UserRegistrationDTO;//UserRegistrationDTO
+
+      ac = new AuthController();
       var uld = new UserLogInDTO();
       uld.email="user1@mail.com";//urd.email;
       uld.password="SomePassword123";//urd.password;
       regResponse = await ac.login(uld.email,uld.password);
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);//UserResponseDTO implies sucess response
-      user = regResponse.result;
+      shared_user = regResponse.result;
       // console.log(user);
     });
   });
   describe('Test Authenticate', () => {
     it('should authenticate returning user', async () => 
     {
-      regResponse = await ac.authenticate(user.token);
+      let ac:AuthController;//AuthController
+      let regResponse:ResponseObj;
+      let urd:UserRegistrationDTO;//UserRegistrationDTO
+      ac = new AuthController();
+
+      regResponse = await ac.authenticate(shared_user.token);
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.IsSuccess).toBe(true);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
       // console.log(user.token);
     });
   });
-  describe('Test User Lockout', () => {
-    // it('should Lock user Account', async () => 
-    // {
-    //   regResponse = await ac.authenticate(user.token);
-    //   expect(regResponse).toBeInstanceOf(ResponseObj);
-    //   expect(regResponse.IsSuccess).toBe(true);
-    //   expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
-    //   // console.log(user.token);
-    // });
-    test("should Lock user Account after 3 tries", () => {
-      const t = async () => {
-        // throw new TypeError();
-        regResponse = await ac.authenticate(user.token);
-        throw regResponse;
-      };
-      expect(t).toThrow(TypeError);
-    });
+  describe('Test Invalid Login', () => {
+    let ac:AuthController;//AuthController
+    ac = new AuthController();
+        it("should fail if incorrect password", async () => {
+          var  uld = new UserLogInDTO();
+            uld.email="user1@mail.com";
+            uld.password="SomePassword1234"; 
+          await expect(ac.login(uld.email,uld.password)).rejects.toBeInstanceOf(
+                          ResponseObj
+                        );
+                        console.log("---------------------------------------------------------------------------");
+        })
   });
+  // describe('Test User Lockout', () => {
+  //   // it('should Lock user Account', async () => 
+  //   // {
+  //   //   regResponse = await ac.authenticate(user.token);
+  //   //   expect(regResponse).toBeInstanceOf(ResponseObj);
+  //   //   expect(regResponse.IsSuccess).toBe(true);
+  //   //   expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
+  //   //   // console.log(user.token);
+  //   // });
+  //   test("should Lock user Account after 3 tries", () => {
+  //     const t = async () => {
+  //       // throw new TypeError();
+  //       regResponse = await ac.authenticate(user.token);
+  //       throw regResponse;
+  //     };
+  //     expect(t).toThrow(TypeError);
+  //   });
+  // });
   
   
 });
