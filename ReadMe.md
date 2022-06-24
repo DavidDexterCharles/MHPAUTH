@@ -267,6 +267,6 @@ export { UserRegistrationDTO,
 
 - When `npm run test` is executed the following command "`env NODE_ENV=test jest `" is run that tells jest that the environment we are testing in is a test environment ( which will cause the tests to read/write to the test database :myhealthpasstest)
 
-- Sample Test Runs Output Below (note below results though test user lockout says to do , the functionality has been enabled in the authcontroller):
+- Sample Test Runs Output Below :
 
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)
