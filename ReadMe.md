@@ -49,7 +49,9 @@
 
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)
 
-Further details of how to run both the test suite and main.ts of the the SampleApp are greatly discussed in detail in Option (B) and Option (A) below. One note regarding running `AuthController.test.ts` is that on each run a new user is created based on a random  string, as will be revealed later on the test suite by default will run in a test environment which means that the results  of the tests would be available in the test database.
+Further details of how to run both the test suite and main.ts of the the SampleApp are greatly discussed in detail in Option (B) and Option (A) below. One note regarding running `AuthController.test.ts` is that on each run a new user is created based on a random  string, as will be revealed later on the test suite by default will run in a test environment which means that the results  of the tests would be available in the test database. As Illustrated in following screenshot.
+
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/TestDbPopulated.PNG)
 
 # Option (A) - Quick Setup (library|SampleApp)
 *See* **Option (B)** for detail setup **or** continue here to skip steps:
