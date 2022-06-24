@@ -15,10 +15,6 @@
  
  The bulk of the library code is stored at [AuthController.ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/library/mhpauth/src/services/controllers/AuthController.ts) illustrated in below image. The directory in the below image was set up so that when `npm run build` is executed in mhpauth, a dist folder gets generated. At this point the mhpauth app becomes a module that can be published as an npm package to npm registry or consumed locally by running the command  `npm link ../library/mhpauth` . 
  
- Other Note:
- The functionality that is triggered when a user makes 3 failed consecutive attempts has been implemented with [implementation details at AuthController.ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/c82d9b9ce8fea2acb9b20cfb2224b6529b721eb4/library/mhpauth/src/services/controllers/AuthController.ts#L73) which contains all the functionality for the requested fetures. This feture was and can be tested in main.ts by calling the login function 3 times with an existing user using an incorrect password each time.  Iplementation details [here](https://github.com/DavidDexterCharles/MHPAUTH/blob/c82d9b9ce8fea2acb9b20cfb2224b6529b721eb4/library/mhpauth/src/services/controllers/AuthController.ts#L73)
- 
- I was able to test it manually by running the main.ts script with an existing user calling the login function multiple times with incorrect password. Initially I shortened the time to 1 minute for quicker testing. I have not yet added this test to AuthController.test.ts test suite.
 
 ## Library **"mhpauth"** directory:
 
@@ -45,6 +41,13 @@
 ##### TWO(2) ResponseObj Example :
 ![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/ResponseObjInUse.png)
 
+# Testing Functionality and Features of **MHPAUTH**
+
+ The requested behaviour that is triggered when a user makes 3 failed consecutive attempts, along with all the other requested requirements are at [AuthController.ts](https://github.com/DavidDexterCharles/MHPAUTH/blob/c82d9b9ce8fea2acb9b20cfb2224b6529b721eb4/library/mhpauth/src/services/controllers/AuthController.ts#L73) . 
+
+ It was deceided that illustration of the library and solution would be best demonstrated using a small test suite `AuthController.test.ts` and `SampleApp`.  SampleApp is a seperate directory from the library(mhpauth) with important codescripts being **main.ts** and **test\AuthController.test.ts** suite. This directory is what would be used to illustrate how the library mhpauth can be successfully imported into another project. The `AuthController.test.ts` is used to illustrate the features of the library while also providing automated tests. A snap shot of the tests done by the test suite is show below.
+ 
+![Alt text](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/gitimages/JestUnitTest.PNG)
 
 # Option (A) - Quick Setup (library|SampleApp)
 *See* **Option (B)** for detail setup **or** continue here to skip steps:
@@ -143,7 +146,7 @@ CREATE TABLE `user` (
 - Details on how these commands are executed can be found in the package.json file within **\MHPAUTH\SampleApp** . `package.json`:
 ```json
  "scripts": {
-    "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
+    "test": "env NODE_ENV=test jest ",
     "start": "env NODE_ENV=development nodemon main.ts",
     "devenv":"env NODE_ENV=development nodemon main.ts",
     "testenv":"env NODE_ENV=test nodemon main.ts",
@@ -228,7 +231,7 @@ Command Listing for quick reference :
 - Details on how these commands are executed can be found in the package.json file within **\MHPAUTH\SampleApp** . `package.json`:
 ```json
  "scripts": {
-    "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
+    "test": "env NODE_ENV=test jest ",
     "start": "env NODE_ENV=development nodemon main.ts",
     "devenv":"env NODE_ENV=development nodemon main.ts",
     "testenv":"env NODE_ENV=test nodemon main.ts",
@@ -258,7 +261,7 @@ export { UserRegistrationDTO,
 - 
 ## Running the tests
 
-- When `npm run test` is executed the following command "`env NODE_ENV=test jest --coverage --watchAll --verbose`" is run that tells jest that the environment we are testing in is a test environment ( which will cause the tests to read/write to the test database :myhealthpasstest)
+- When `npm run test` is executed the following command "`env NODE_ENV=test jest `" is run that tells jest that the environment we are testing in is a test environment ( which will cause the tests to read/write to the test database :myhealthpasstest)
 
 - Sample Test Runs Output Below (note below results though test user lockout says to do , the functionality has been enabled in the authcontroller):
 

@@ -3,9 +3,10 @@ import {AuthController,UserRegistrationDTO,userRepository,ResponseObj,UserRespon
 
 var authService = new AuthController();
 
-let ur:userRepository; // empty database then reattempt registration
-ur = new userRepository();
-ur.deleteAllusers();
+// let ur:userRepository; // empty database then reattempt registration
+// ur = new userRepository();
+// ur.deleteAllusers();
+
 let regResponse;
 
 // Registration Object
@@ -50,8 +51,8 @@ var urd2 =new UserRegistrationDTO();
 urd2.email="newuserd@mail.com";
 urd2.firstname="newuser";
 urd2.lastname="newuser"; 
-urd2.password="newuserpass";
-urd2.passwordconfirm="newuserpass";
+urd2.password="SomePassword123";
+urd2.passwordconfirm="SomePassword123";
 urd2.phone="111888999";
 regResponse = authService.register(urd2);//("1test@test.com","passtoHash");
 regResponse.then(function(result){
@@ -60,20 +61,3 @@ regResponse.then(function(result){
 }).catch((error)=>{
     console.log(error); 
 });
-
-// for(var i=1;i<=2;i++)
-// {
-//     console.log(`Login attempt: ${i}`); 
-//     var uld = new UserLogInDTO();
-//     uld.email=urd2.email;
-//     uld.password=urd.password+"two fail login";
-//     let acressult = authService.login(uld.email,uld.password);//ac.login2(uld);
-//     acressult.then((ResponseObj)=>{
-//         //console.log(ResponseObj.message); 
-//         console.log("Login successful..."); 
-
-//     }).catch((error)=>{
-//         console.log("Failed Log in"); 
-//             // console.log(error); 
-//         });
-// }

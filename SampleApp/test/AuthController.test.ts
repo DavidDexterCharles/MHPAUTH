@@ -1,42 +1,38 @@
 import {AuthController,UserRegistrationDTO,userRepository,ResponseObj,UserResponseDTO, UserLogInDTO}  from 'mhpauth';
 
 let ur:any;//userRepository
-  beforeAll(async () => { // clean user table before run 
-    ur = new userRepository();
-    await ur.deleteAllusers();
-    });
+let curr_useremail= `${makeid(6)}@mail.com`
+  // beforeAll(async () => { // clean user table before run 
+  //   ur = new userRepository();
+  //   await ur.deleteAllusers();
+  //   });
 
-  afterAll(async () => {   // clean user table after run 
-    ur = new userRepository();
-    await ur.deleteAllusers();
-  });
+  // afterAll(async () => {   // clean user table after run 
+  //   ur = new userRepository();
+  //   await ur.deleteAllusers();
+  // });
+  function makeid(length:number) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+        charactersLength));
+   }
+   return result;
+}
 
 describe('AuthController Functionality', () => {
-  
-  // let ac:AuthController;//AuthController
- 
   let shared_user:UserResponseDTO;
-
-  // let regResponse:ResponseObj;//UserRegistrationDTO
-
-  
-  
-  // beforeEach(() => {
-  //     ac = new AuthController();
-  //     regResponse = new ResponseObj();
-  // });
-
   describe('Test Registration', () => {
     it('should register new user', async () => 
     {
       let ac:AuthController;//AuthController
       let regResponse:ResponseObj;
       let urd:UserRegistrationDTO;//UserRegistrationDTO
-
       ac = new AuthController();
-      //test with one user-- wasnt sure how deep I should go regarding writting unit tests
       urd =new UserRegistrationDTO();
-      urd.email="user1@mail.com";
+      urd.email=curr_useremail;//"user1@mail.com";
       urd.firstname="f1";
       urd.lastname="l1"; 
       urd.password="SomePassword123";
@@ -47,12 +43,6 @@ describe('AuthController Functionality', () => {
       expect(regResponse.IsSuccess).toBe(true);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);
       shared_user=regResponse.result.UserResponseDTO;
-      // expect(regResponse.).toBeInstanceOf(ResponseObj);//should pass
-      // expect(regResponse.).toBeInstanceOf(ResponseObj);//should pass
-
-      // console.log(regResponse.IsSuccess);
-      // expect(stack.top).toBe(-1);
-      // expect(stack.items).toEqual({});
     });
     
   });
@@ -65,13 +55,12 @@ describe('AuthController Functionality', () => {
 
       ac = new AuthController();
       var uld = new UserLogInDTO();
-      uld.email="user1@mail.com";//urd.email;
+      uld.email=curr_useremail;//"user1@mail.com";//urd.email;
       uld.password="SomePassword123";//urd.password;
       regResponse = await ac.login(uld.email,uld.password);
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);//UserResponseDTO implies sucess response
       shared_user = regResponse.result;
-      // console.log(user);
     });
   });
   describe('Test Authenticate', () => {
@@ -89,80 +78,68 @@ describe('AuthController Functionality', () => {
       // console.log(user.token);
     });
   });
-  describe('Test Invalid Login', () => {
-    let ac:AuthController;//AuthController
-    ac = new AuthController();
-        it("should fail if incorrect password", async () => {
-          var  uld = new UserLogInDTO();
-            uld.email="user1@mail.com";
-            uld.password="SomePassword1234"; 
-          await expect(ac.login(uld.email,uld.password)).rejects.toBeInstanceOf(
-                          ResponseObj
-                        );
-                        console.log("---------------------------------------------------------------------------");
-        })
-  });
-  describe('Test User Lock Out', () => {
-        let ac:AuthController;//AuthController
-        ac = new AuthController();
-        it.only("Should lock after 3 attempts", async () => 
+
+    describe('Test User Lock Out', () => 
+    {
+      let ac:AuthController;//AuthController
+      ac = new AuthController();
+        it("Should lock existing user out after 3 failed password attempts", async () => 
         {
             var  uld = new UserLogInDTO();
-            uld.email="user1@mail.com";
+            uld.email=curr_useremail;//"user1@mail.com";
             uld.password="SomePassword1234"; 
-            const throwingFunction = () => ac.login2(uld)
+            const throwingFunction = () => ac.login(uld.email,uld.password)
             await throwingFunction().catch(error => 
             {
+                console.log("111111111111111111111111111111111111111111111"); //the numbers just easily idicates what email log out attempt we are at
                 console.log(error); 
                 expect(error).toBeInstanceOf(ResponseObj)
-                // expect(error.message).toMatch(new RegExp('Could not login user'))
+                expect(error.IsSuccess).toBe(false)
+                expect(error.message).toMatch(new RegExp('Incorrect password'))
+                // expect(error).toMatchObject(
+                // {
+                //     details: new RegExp('Invalid payload provided'),
+                // })
+            });
+            const throwingFunction2 = () => ac.login(uld.email,uld.password)
+            await throwingFunction2().catch(error => 
+            {
+                console.log("2222222222222222222222222222222222222222222222222222222"); 
+                console.log(error); 
+                expect(error).toBeInstanceOf(ResponseObj)
+                expect(error.IsSuccess).toBe(false)
+                expect(error.message).toMatch(new RegExp('Incorrect password'))
+                // expect(error).toMatchObject(
+                // {
+                //     details: new RegExp('Invalid payload provided'),
+                // })
+            });
+            const throwingFunction3 = () => ac.login(uld.email,uld.password)
+            await throwingFunction3().catch(error => 
+            {
+                console.log("333333333333333333333333333333333333333333333333333333333"); 
+                console.log(error); 
+                expect(error).toBeInstanceOf(ResponseObj)
+                expect(error.IsSuccess).toBe(false)
+                expect(error.message).toMatch(new RegExp('Incorrect password'))
+                // expect(error).toMatchObject(
+                // {
+                //     details: new RegExp('Invalid payload provided'),
+                // })
+            });
+            const throwingFunction4 = () => ac.login(uld.email,uld.password)// on thiss 4th Login attempt the user account would be locked and this would be visible in the database
+            await throwingFunction4().catch(error => 
+            {
+                console.log("444444444444444444444444444444444444444444444444444444444"); 
+                console.log(error); 
+                expect(error).toBeInstanceOf(ResponseObj)
+                expect(error.IsSuccess).toBe(false)
+                expect(error.message).toMatch(new RegExp('Account Locked for 20 minutes and will be reavailable after...'))
                 // expect(error).toMatchObject(
                 // {
                 //     details: new RegExp('Invalid payload provided'),
                 // })
             })
-        })
-  });
-  // describe('Test User Lockout', () => {
-  //   let ac:AuthController;//AuthController
-  //   ac = new AuthController();
-  //   var  uld = new UserLogInDTO();
-  //   uld.email="76david@mail.com";
-  //   uld.password="SomePassword1234"; 
-  //       it('throws an error when it is not possible to create an user', async () => {
-  //         const throwingFunction = () => ac.login2(uld)
-  //         const throwingFunction2 = () => ac.login2(uld)
-  //         // This is what prevents the test to succeed when the promise is resolved and not rejected
-  //         expect.assertions(3)
-      
-  //         await throwingFunction().catch(error => {
-  //             expect(error).toBeInstanceOf(Error)
-  //             expect(error.message).toMatch(new RegExp('Could not login user'))
-  //             expect(error).toMatchObject({
-  //                 details: new RegExp('Invalid payload provided'),
-  //             })
-  //         })
-  //     })
-  // });
-  
-  // describe('Test User Lockout', () => {
-  //   // it('should Lock user Account', async () => 
-  //   // {
-  //   //   regResponse = await ac.authenticate(user.token);
-  //   //   expect(regResponse).toBeInstanceOf(ResponseObj);
-  //   //   expect(regResponse.IsSuccess).toBe(true);
-  //   //   expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
-  //   //   // console.log(user.token);
-  //   // });
-  //   test("should Lock user Account after 3 tries", () => {
-  //     const t = async () => {
-  //       // throw new TypeError();
-  //       regResponse = await ac.authenticate(user.token);
-  //       throw regResponse;
-  //     };
-  //     expect(t).toThrow(TypeError);
-  //   });
-  // });
-  
-  
+         })
+      });
 });
