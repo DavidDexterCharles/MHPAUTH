@@ -1,6 +1,9 @@
 import {AuthController}  from './index'
 import {UserRegistrationDTO,UserLogInDTO} from './DTOS/APIDTO';
 
+/***************************IMPORTANT NOTE!!!***************************************/
+// main.ts can be used to test if a user have regained login access after the 20 minuutes lockout time has passed
+
 var authService = new AuthController();
 
 // let ur:userRepository; // empty database then reattempt registration
@@ -32,7 +35,8 @@ regResponse.then(function(regResponse){
 });
 
 //here we reset password using the same password,                                                                                 
-//feel free to experiment by changing password value to new password, below nested login should fail along with authenticate
+//feel free to experiment by changing password value to new password, note:if password is changed from some_password
+//to a new one then below nested login should fail along with authenticate
 var passwordResetresponse =  authService.passwordReset(some_email,some_password);
  
 passwordResetresponse.then(function(passwordResetResults)
