@@ -124,7 +124,7 @@ export class AuthController  {
         urdto.accessfailedcount = urdto.accessfailedcount+1;
         if(urdto.accessfailedcount>=3){
             var current_timestamp = moment().toDate();
-            urdto.lockoutend = moment(current_timestamp).add(1, 'm').toDate();
+            urdto.lockoutend = moment(current_timestamp).add(20, 'm').toDate();
         }
         var user = db.user.build(urdto).toJSON();
         const result = await s.updateuser(user,user.id);
@@ -227,9 +227,5 @@ export class AuthController  {
         } catch (err) {
             throw  failureResponse(err,'Invalid User');
         }
-    }
-    public printLowerCase(message:string):string{
-        console.log(require.main.filename);
-        return message.toLowerCase() + require.main.filename.toString();
     }
 }

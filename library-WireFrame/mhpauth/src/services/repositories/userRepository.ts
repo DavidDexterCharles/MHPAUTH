@@ -67,6 +67,17 @@ class userRepository {
             throw err.errors[0];
         }
     }
+    public async deleteAllusers() {
+        try {
+            const result = await db.user.destroy({
+                where: {},
+                truncate: true
+            });
+            return result;
+        } catch (err) {
+            throw err.errors[0];
+        }
+    }
 }
 // export = userRepository;
 export{userRepository}

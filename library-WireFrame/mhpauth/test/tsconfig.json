@@ -8,7 +8,7 @@
     "noImplicitAny": true,
     "declaration": true
   },
-  "files": [ "AuthController.test.ts","module.test.ts"],
+  "files": [ "AuthController.test.ts"],
   "exclude": [
     "node_modules"
   ]
