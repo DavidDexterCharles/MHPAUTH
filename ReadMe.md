@@ -1,6 +1,6 @@
 # Library Usage Guide 
 
-## Please see [Summary/Quick Overview](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/DocumentationSimpler.pdf) for mainpoints on using the library.
+## Please see [Summary/Quick Overview](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/DocumentationSimpler.pdf) for main points on using the library.
 
 ### Required technologies:
 - NodeJS version [node-v16.15.1](https://nodejs.org/en/)
