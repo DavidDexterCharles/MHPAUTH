@@ -1,0 +1,269 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AuthController = void 0;
+const repos = require('../repositories/index');
+const db = require('../../../../mhpauthDB/models/index'); //('../models/index');
+const jwt = require("jsonwebtoken");
+const util = require('util');
+const jwtVerifyAsync = util.promisify(jwt.verify);
+const bcrypt = require('bcryptjs');
+const moment = require("moment");
+require('dotenv').config();
+const APIDTO_1 = require("../DTOS/APIDTO");
+class AuthController {
+    login(username, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                var accountDetails = new APIDTO_1.UserLogInDTO();
+                accountDetails.email = username;
+                accountDetails.password = password;
+                return yield this.login2(accountDetails);
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    //If your login request is via a user 
+    // supplying a username and password then a POST 
+    // is preferable, as details will be sent in 
+    // the HTTP messages body rather than the URL
+    //UserLogInDTO is used to suggest POST request usage rather than GET request
+    login2(accountDetails) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const validation = (yield (0, APIDTO_1.isValidDTO)(APIDTO_1.UserLogInDTO)); // check if dto object is valid and matches specifications
+            if (validation.hasErrors) {
+                // console.log(validation.errors); 
+                throw (0, APIDTO_1.failureResponse)(validation.errors[0], "dto violation- one or more fields did not pass validation");
+            }
+            try {
+                var s = new repos.userRepository();
+                // console.log(accountDetails.email +"-================================================");
+                const result = yield s.getuserByEmail(accountDetails.email); //(username);
+                // console.log(result);
+                if (!result) {
+                    throw new Error("Login Failed Invalid Username or Password"); // intentionally Not letting user no whether the user exists or not to deter exploits
+                }
+                // at each login attempt, need to check if accessfailedcount is >=  3 and if lockoutend have elapsed 
+                //if lockoutend elapsed then set accessfailedcount to 0 and lockoutend to null
+                // otherwise reject login access
+                const { id, email, firstname, lastname, phone, emailconfirmed, accessfailedcount, lockoutend, password } = result.toJSON();
+                var urdto = new APIDTO_1.UserResponseDTO();
+                urdto.firstname = firstname;
+                urdto.lastname = lastname;
+                urdto.email = email;
+                urdto.phone = phone;
+                urdto.emailconfirmed = emailconfirmed;
+                urdto.accessfailedcount = accessfailedcount;
+                urdto.lockoutend = lockoutend;
+                urdto.id = id;
+                if (!(yield this.lockoutCompleted(urdto))) {
+                    throw new Error(`Account Locked for 20 minutes and will be reavailable after ${lockoutend}`);
+                }
+                const passMatch = yield bcrypt.compare(accountDetails.password, password);
+                if (!passMatch) {
+                    var u = yield this.incrementFailedAccess(urdto);
+                    urdto = u;
+                    if (u.accessfailedcount >= 3)
+                        throw new Error(`Account Locked for 20 minutes and will be reavailable after ${lockoutend}`);
+                    else
+                        throw new Error("Incorrect password");
+                }
+                else {
+                    if (accessfailedcount > 0) {
+                        var s = new repos.userRepository();
+                        urdto.accessfailedcount = 0;
+                        urdto.lockoutend = null;
+                        var user = db.user.build(urdto).toJSON();
+                        const rofupdate = yield s.updateuser(user, user.id);
+                    }
+                }
+                //secretkey generated by running the following command in node "crypto.randomBytes(64).toString("hex");"
+                var secretkey = process.env.SECRET_KEY; //key stored in .env not included on git commits accessed using require('dotenv').config();
+                var token = yield jwt.sign({ UserResponseDTO: { email, firstname, lastname, id } }, secretkey, { expiresIn: '1h' });
+                urdto.token = token;
+                return (0, APIDTO_1.successResponse)(urdto, "User Logged In Sucessfully");
+            }
+            catch (err) {
+                // console.log( err);
+                // throw err;
+                throw (0, APIDTO_1.failureResponse)(err, err.message);
+            }
+        });
+    }
+    lockoutCompleted(urdto) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (urdto.accessfailedcount >= 3) {
+                var beginningTime = moment(urdto.lockoutend);
+                var endTime = moment().toDate(); //now
+                if (beginningTime.isBefore(endTime)) // then time for lockoutend has elapsed and the user should regain access
+                 {
+                    var s = new repos.userRepository();
+                    urdto.accessfailedcount = 0;
+                    urdto.lockoutend = null;
+                    var user = db.user.build(urdto).toJSON();
+                    const result = yield s.updateuser(user, user.id);
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else {
+                return true;
+            }
+        });
+    }
+    incrementFailedAccess(urdto) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var s = new repos.userRepository();
+            urdto.accessfailedcount = urdto.accessfailedcount + 1;
+            if (urdto.accessfailedcount >= 3) {
+                var current_timestamp = moment().toDate();
+                urdto.lockoutend = moment(current_timestamp).add(20, 'm').toDate();
+            }
+            var user = db.user.build(urdto).toJSON();
+            const result = yield s.updateuser(user, user.id);
+            return urdto;
+        });
+    }
+    //made password optional parameter , however if it is passed in it will 
+    //overwrite the ppassword and password confirm fields in accountDetails
+    register(accountDetails, password = "") {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (password) {
+                accountDetails.password = password;
+                accountDetails.passwordconfirm = password;
+            }
+            // accountDetails.password="hidt";//hash and confirm password before validating
+            const validation = (yield (0, APIDTO_1.isValidDTO)(accountDetails)); // check if dto object is valid and matches specifications
+            if (validation.hasErrors) {
+                // console.log(validation.errors); 
+                // accountDetails.password=accountDetails.password.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+                // accountDetails.passwordconfirm=accountDetails.passwordconfirm.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+                throw (0, APIDTO_1.failureResponse)(validation.errors[0], "dto violation- one or more fields did not pass validation please see (errors) for details");
+            }
+            if (!(accountDetails.password === accountDetails.passwordconfirm)) {
+                // accountDetails.password=accountDetails.password.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+                // accountDetails.passwordconfirm=accountDetails.passwordconfirm.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+                throw (0, APIDTO_1.failureResponse)(accountDetails, 'Registration Failed "Password was different from Confirmation Password" ');
+            }
+            try {
+                // accountDetails.password=await bcrypt.hash(accountDetails.password, 12);
+                var s = new repos.userRepository();
+                var existinguser = yield s.getuserByEmail(accountDetails.email);
+                if (existinguser) {
+                    throw new Error("Registration Failed The E-mail is already in use");
+                }
+                accountDetails.password = yield bcrypt.hash(accountDetails.password, 12);
+                accountDetails.createdat = moment().toDate();
+                var user = db.user.build(accountDetails).toJSON();
+                // console.log(user); ///* const {email, firstname,lastname,password}=accountDetails;user.email=email;*/
+                // console.log(accountDetails);  
+                var result = yield s.adduser(user);
+                const { id, email, firstname, lastname, phone, emailconfirmed, accessfailedcount } = result.toJSON();
+                var urdto = new APIDTO_1.UserResponseDTO();
+                urdto.firstname = firstname;
+                urdto.lastname = lastname;
+                urdto.email = email;
+                urdto.phone = phone;
+                urdto.emailconfirmed = emailconfirmed;
+                urdto.accessfailedcount = accessfailedcount;
+                urdto.id = id;
+                return (0, APIDTO_1.successResponse)(urdto, "Registration Completed Sucessfully");
+            }
+            catch (err) {
+                // console.log(err);
+                // return err;
+                throw (0, APIDTO_1.failureResponse)(err, err.message);
+                // throw err;
+            }
+        });
+    }
+    passwordReset(username, password) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                var urdto = new APIDTO_1.UserResponseDTO();
+                var s = new repos.userRepository();
+                var existinguser = yield s.getuserByEmail(username);
+                if (existinguser) {
+                    const { id, email, firstname, lastname, phone, emailconfirmed, accessfailedcount } = existinguser.toJSON();
+                    //UserResponseDTO
+                    urdto.firstname = firstname;
+                    urdto.lastname = lastname;
+                    urdto.email = email;
+                    urdto.phone = phone;
+                    urdto.emailconfirmed = emailconfirmed;
+                    urdto.accessfailedcount = accessfailedcount;
+                    urdto.id = id;
+                    var uregdto = new APIDTO_1.UserRegistrationDTO();
+                    uregdto.password = password;
+                    const validation = (yield (0, APIDTO_1.isValidDTO)(uregdto, true));
+                    if (validation.hasErrors) {
+                        throw (0, APIDTO_1.failureResponse)(validation.errors[0], "Password does not satisfy requirements");
+                    }
+                    uregdto.password = yield bcrypt.hash(password, 12);
+                    var user = db.user.build(uregdto).toJSON();
+                    yield s.updateuser(user, id);
+                    // console.log(uregdto);
+                    return (0, APIDTO_1.successResponse)(urdto, "PasswordReset Completed Sucessfully");
+                }
+                else {
+                    throw (0, APIDTO_1.failureResponse)(username, "User does not exist");
+                }
+            }
+            catch (error) {
+                throw error;
+            }
+        });
+    }
+    authenticate(token, pulldetails = false) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                var secretkey = process.env.SECRET_KEY; //key stored in .env not included on git commits accessed using require('dotenv').config();
+                var authData = yield jwtVerifyAsync(token, secretkey);
+                var urdto = new APIDTO_1.UserResponseDTO();
+                // console.log(authData.UserResponseDTO.email);
+                // if pulldetails iss true then return all allowable details about the user, essentially user profile
+                //may want to query database also in the event user no llonger active... not implented
+                if (pulldetails) {
+                    var s = new repos.userRepository();
+                    var existinguser = yield s.getuserByEmail(authData.UserResponseDTO.email);
+                    if (existinguser) {
+                        const { id, email, firstname, lastname, phone, emailconfirmed, accessfailedcount } = existinguser.toJSON();
+                        urdto.firstname = firstname;
+                        urdto.lastname = lastname;
+                        urdto.email = email;
+                        urdto.phone = phone;
+                        urdto.emailconfirmed = emailconfirmed;
+                        urdto.accessfailedcount = accessfailedcount;
+                        urdto.id = id;
+                        return (0, APIDTO_1.successResponse)(urdto, "User Authenticated Sucessfully");
+                    }
+                }
+                else {
+                    const { id, email, firstname, lastname } = authData.UserResponseDTO;
+                    urdto.firstname = firstname;
+                    urdto.lastname = lastname;
+                    urdto.email = email;
+                    urdto.id = id;
+                }
+                return (0, APIDTO_1.successResponse)(urdto, "User Authenticated Sucessfully");
+            }
+            catch (err) {
+                throw (0, APIDTO_1.failureResponse)(err, 'Invalid User');
+            }
+        });
+    }
+}
+exports.AuthController = AuthController;
+//# sourceMappingURL=AuthController.js.map
