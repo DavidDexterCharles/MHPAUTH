@@ -151,14 +151,14 @@ export class AuthController  {
         if(validation.hasErrors)
         {
             // console.log(validation.errors); 
-            accountDetails.password=accountDetails.password.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
-            accountDetails.passwordconfirm=accountDetails.passwordconfirm.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+            // accountDetails.password=accountDetails.password.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+            // accountDetails.passwordconfirm=accountDetails.passwordconfirm.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
             throw failureResponse(validation.errors[0],"dto violation- one or more fields did not pass validation please see (errors) for details");
         }
         if(!(accountDetails.password===accountDetails.passwordconfirm))
         {
-            accountDetails.password=accountDetails.password.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
-            accountDetails.passwordconfirm=accountDetails.passwordconfirm.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+            // accountDetails.password=accountDetails.password.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
+            // accountDetails.passwordconfirm=accountDetails.passwordconfirm.replace(/\w/gi  , '-');//replace entered password with dashes for privacy reasons
             throw  failureResponse(accountDetails,'Registration Failed "Password was different from Confirmation Password" ');
         }
         try 
@@ -193,6 +193,46 @@ export class AuthController  {
             // return err;
             throw failureResponse(err,err.message);
             // throw err;
+        }
+    }
+    public async passwordReset(username:string, password:string):Promise<ResponseObj> 
+    {
+        try 
+        {
+            var urdto = new UserResponseDTO();
+            var s = new repos.userRepository();
+            var existinguser =await s.getuserByEmail(username);
+            if(existinguser)
+            {
+                const {id,email, firstname,lastname,phone,emailconfirmed,accessfailedcount}=existinguser.toJSON();
+                //UserResponseDTO
+                urdto.firstname = firstname;
+                urdto.lastname=lastname;
+                urdto.email=email;
+                urdto.phone=phone;
+                urdto.emailconfirmed=emailconfirmed;
+                urdto.accessfailedcount=accessfailedcount;
+                urdto.id = id;
+
+                var uregdto = new UserRegistrationDTO();
+                uregdto.password = password;
+                const validation = (await isValidDTO(uregdto,true));
+                if(validation.hasErrors)
+                {
+                    throw failureResponse(validation.errors[0],"Password does not satisfy requirements");
+                }
+                uregdto.password=await bcrypt.hash(password, 12);
+                var user = db.user.build(uregdto).toJSON();
+                await s.updateuser(user,id);
+                // console.log(uregdto);
+                return successResponse(urdto,"PasswordReset Completed Sucessfully");
+            }
+            else{
+                throw  failureResponse(username,"User does not exist");
+            }
+        } 
+        catch (error) {
+            throw error;
         }
     }
     public async authenticate(token: string,pulldetails:boolean=false) :Promise<ResponseObj>

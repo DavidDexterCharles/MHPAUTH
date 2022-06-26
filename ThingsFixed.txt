@@ -12,3 +12,8 @@ Third attempt wrong error message (tests also updated):
 	|> this might be preferable/alternative option for running instead of using default nodemon
 |> main.ts have been cleaned up to run two functions and variables were added to the top of file to make editing commands easier
 |> npm start has been switcheed to run on test environment by default instead of dev environment, since the automated test data populates myhealthpasstest.user
+
+
+Realised some tests were still passing due to missing expect.assertions
+|> when testing with Jest and async methods the expect.assertions is importan see below link. I have therefore udated all tests accordingly
+https://stackoverflow.com/questions/50816254/necessary-to-use-expect-assertions-if-youre-awaiting-any-async-function-calls

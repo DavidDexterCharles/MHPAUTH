@@ -3,7 +3,11 @@ import {AuthController, ResponseObj, UserLogInDTO, UserRegistrationDTO, UserResp
 
 
 let ur:any;//userRepository
-let curr_useremail= `${makeid(6)}@mail.com`
+let curr_useremail= `${makeid(6)}@mail.com`;
+let some_password="SomePassword123";//"SomePassword123"
+let some_firstname="sfname";
+let some_lastname="slname";
+let some_phone="s-777-8864";
   // beforeAll(async () => { // clean user table before run 
   //   ur = new userRepository();
   //   await ur.deleteAllusers();
@@ -29,17 +33,18 @@ describe('AuthController Functionality', () => {
   describe('Test Registration', () => {
     it('should register new user', async () => 
     {
+      expect.assertions(3);
       let ac:AuthController;//AuthController
       let regResponse:ResponseObj;
       let urd:UserRegistrationDTO;//UserRegistrationDTO
       ac = new AuthController();
       urd =new UserRegistrationDTO();
       urd.email=curr_useremail;//"user1@mail.com";
-      urd.firstname="f1";
-      urd.lastname="l1"; 
-      urd.password="SomePassword123";
-      urd.passwordconfirm="SomePassword123";
-      urd.phone="123-4562";
+      urd.firstname=some_firstname;
+      urd.lastname=some_lastname; 
+      urd.password=some_password;
+      urd.passwordconfirm=some_password;
+      urd.phone=some_phone;
       regResponse = await ac.register(urd); 
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.IsSuccess).toBe(true);
@@ -52,6 +57,7 @@ describe('AuthController Functionality', () => {
   describe('Test Login', () => {
     it('should login new user', async () => 
     {
+      expect.assertions(2);
       let ac:AuthController;//AuthController
       let regResponse:ResponseObj;
       let urd:UserRegistrationDTO;//UserRegistrationDTO
@@ -59,7 +65,7 @@ describe('AuthController Functionality', () => {
       ac = new AuthController();
       var uld = new UserLogInDTO();
       uld.email=curr_useremail;//"user1@mail.com";//urd.email;
-      uld.password="SomePassword123";//urd.password;
+      uld.password=some_password;//urd.password;
       regResponse = await ac.login(uld.email,uld.password);
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);//UserResponseDTO implies sucess response
@@ -70,15 +76,62 @@ describe('AuthController Functionality', () => {
   describe('Test Authenticate', () => {
     it('should authenticate returning user', async () => 
     {
+      expect.assertions(3);
       let ac:AuthController;//AuthController
       let regResponse:ResponseObj;
-      let urd:UserRegistrationDTO;//UserRegistrationDTO
       ac = new AuthController();
 
       regResponse = await ac.authenticate(shared_user.token);
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.IsSuccess).toBe(true);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
+      console.log(regResponse);
+    });
+  });
+  describe('Test Password  Reset', () => {
+    let thenewpassword="thenewpassword";
+    
+    it('should reset a users password', async () => 
+    {
+      expect.assertions(3);
+      let ac:AuthController;//AuthController
+      let regResponse:ResponseObj;
+      ac = new AuthController();
+
+      regResponse = await ac.passwordReset(curr_useremail,thenewpassword);
+      expect(regResponse).toBeInstanceOf(ResponseObj);
+      expect(regResponse.IsSuccess).toBe(true);
+      expect(regResponse.result).toBeInstanceOf(UserResponseDTO);
+      console.log(regResponse);
+    });
+    it('should login with new password', async () => 
+    {
+      expect.assertions(2);
+
+      let ac:AuthController;//AuthController
+      let regResponse:ResponseObj;
+      let urd:UserRegistrationDTO;//UserRegistrationDTO
+
+      ac = new AuthController();
+      var uld = new UserLogInDTO();
+      uld.email=curr_useremail;
+      uld.password=thenewpassword;
+      regResponse = await ac.login(uld.email,uld.password);
+      expect(regResponse).toBeInstanceOf(ResponseObj);
+      expect(regResponse.result).toBeInstanceOf(UserResponseDTO);//UserResponseDTO implies sucess response
+      shared_user = regResponse.result;
+      console.log(regResponse);
+    });
+    it('should reset a users password back to original', async () => 
+    {
+      expect.assertions(2);
+      let ac:AuthController;//AuthController
+      let regResponse:ResponseObj;
+      ac = new AuthController();
+      //set password back to original afterwards
+      regResponse = await ac.passwordReset(curr_useremail,some_password);
+      expect(regResponse.IsSuccess).toBe(true);
+      expect(regResponse.result).toBeInstanceOf(UserResponseDTO);
       console.log(regResponse);
     });
   });
@@ -89,6 +142,7 @@ describe('AuthController Functionality', () => {
       ac = new AuthController();
         it("Should lock existing user out after 3 failed password attempts", async () => 
         {
+            expect.assertions(9);//9 because each expect is an assertion within this it block
             var  uld = new UserLogInDTO();
             uld.email=curr_useremail;//"user1@mail.com";
             uld.password="SomePassword1234"; 

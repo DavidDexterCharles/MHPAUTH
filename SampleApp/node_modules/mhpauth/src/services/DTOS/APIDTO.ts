@@ -2,8 +2,23 @@
 // all DTOS were placed in this class to allow for one time imports from "class-validator"
 import {IsString,MinLength,IsInt,IsBoolean, IsEmail,IsDate, IsNotEmpty, IsOptional, Length, MaxLength,validate,validateOrReject } from "class-validator";
 
-export async function isValidDTO(dto:any) {
-  let vresult = await validate(dto);
+export async function isValidDTO(dto:any,Validate1Field:boolean=false) {
+  let vresult;
+  if(Validate1Field)
+    vresult = await validate(dto, { skipMissingProperties: true });//https://stackoverflow.com/a/66703740/5826992
+  else  
+    vresult = await validate(dto);
+
+  if(vresult.length>0)
+  {
+    return {hasErrors:true,errors:vresult};
+  }
+  else{
+    return {hasErrors:false,errors:vresult}
+  }
+}
+export async function isValidDTOField(dto:any) {
+  let vresult = await validate(dto, { skipMissingProperties: true });
   if(vresult.length>0)
   {
     return {hasErrors:true,errors:vresult};
