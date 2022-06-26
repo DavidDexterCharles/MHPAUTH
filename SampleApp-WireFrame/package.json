@@ -7,11 +7,11 @@
     "module": "CommonJS"
   },
   "scripts": {
-    "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
+    "test": "env NODE_ENV=test jest   --detectOpenHandles",
     "start": "env NODE_ENV=development nodemon main.ts",
-    "devenv":"env NODE_ENV=development nodemon main.js",
-    "testenv":"env NODE_ENV=test nodemon main.js",
-    "prodenv":"env NODE_ENV=production nodemon main.js"    
+    "dev-env": "env NODE_ENV=development nodemon main.ts",
+    "test-env": "env NODE_ENV=test nodemon main.ts",
+    "prod-env": "env NODE_ENV=production nodemon main.ts"
   },
   "keywords": [],
   "author": "",
