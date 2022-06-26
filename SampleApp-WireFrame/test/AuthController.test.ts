@@ -1,33 +1,33 @@
-// import {AuthController,UserRegistrationDTO,userRepository,ResponseObj,UserResponseDTO, UserLogInDTO}  from 'mhpauth';
-// import {AuthController, ResponseObj, UserLogInDTO, UserRegistrationDTO, UserResponseDTO}  from '../src/services/index'
-
+// import {userRepository}  from 'mhpauth';
 import { UserResponseDTO, AuthController, ResponseObj, UserRegistrationDTO, UserLogInDTO } from "mhpauth";
 
 
-let ur:any;//userRepository
 let curr_useremail= `${makeid(6)}@mail.com`;
 let some_password="SomePassword123";//"SomePassword123"
 let some_firstname="sfname";
 let some_lastname="slname";
 let some_phone="s-777-8864";
-  // beforeAll(async () => { // clean user table before run 
-  //   ur = new userRepository();
-  //   await ur.deleteAllusers();
-  //   });
 
-  // afterAll(async () => {   // clean user table after run 
-  //   ur = new userRepository();
-  //   await ur.deleteAllusers();
-  // });
-  function makeid(length:number) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
-        charactersLength));
-   }
-   return result;
+// let ur:any;//userRepository
+// beforeAll(async () => { // clean user table before run 
+//   ur = new userRepository();
+//   await ur.deleteAllusers();
+//   });
+
+// afterAll(async () => {   // clean user table after run 
+//   ur = new userRepository();
+//   await ur.deleteAllusers();
+// });
+
+function makeid(length:number) {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+    result += characters.charAt(Math.floor(Math.random() * 
+      charactersLength));
+  }
+  return result;
 }
 
 describe('AuthController Functionality', () => {
