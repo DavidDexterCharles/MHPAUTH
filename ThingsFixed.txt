@@ -1,0 +1,8 @@
+Things Fixed:
+
+The WireFrame folders
+library-WireFrame and SampleApp-WireFrame folders were based on an older set of commits and hence were missing test, and referencing old code
+
+Third attempt wrong error message (tests also updated):
+--Realised that the user was being notified as lock out after 4th attempt, i.e. at third attempt error 
+was incorrect password instead of 'Account Locked for 20 minutes and will be reavailable after...'

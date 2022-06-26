@@ -69,7 +69,10 @@ export class AuthController  {
             if (!passMatch) {
                 var u = await this.incrementFailedAccess(urdto);
                 urdto=u;
-                throw  new Error( "Incorrect password");
+                if (u.accessfailedcount>=3)
+                    throw  new Error(`Account Locked for 20 minutes and will be reavailable after ${lockoutend}`);
+                else
+                    throw  new Error( "Incorrect password");
             }
             else{
                 if(accessfailedcount>0)
