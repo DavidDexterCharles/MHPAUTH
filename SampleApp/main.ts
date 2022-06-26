@@ -1,4 +1,4 @@
-import {AuthController,UserRegistrationDTO,userRepository,ResponseObj,UserResponseDTO, UserLogInDTO}  from 'mhpauth';
+import {AuthController,UserRegistrationDTO,/*userRepository,*/ResponseObj,UserResponseDTO, UserLogInDTO}  from 'mhpauth';
 
 
 var authService = new AuthController();
@@ -9,19 +9,24 @@ var authService = new AuthController();
 
 let regResponse;
 
+let some_email="som@mail.com";
+let some_password="SomePassword123";
+let some_firstname="sfname";
+let some_lastname="slname";
+let some_phone="s-777-8864";
+ 
 // Registration Object
 console.log("Registered User")
 var urd =new UserRegistrationDTO();
-urd.email="76david@mail.com";
-urd.firstname="david";
-urd.lastname="chalix"; 
-urd.password="SomePassword123";
-urd.passwordconfirm="SomePassword123";
-urd.phone="123-4562";
- regResponse = authService.register(urd);//("1test@test.com","passtoHash");
-regResponse.then(function(result){
-    console.log("Registration successful............");  
-    console.log(result.message);  
+urd.email=some_email;
+urd.firstname=some_firstname;
+urd.lastname=some_lastname; 
+urd.password=some_password;
+urd.passwordconfirm=some_password;
+urd.phone=some_phone;
+regResponse = authService.register(urd);
+regResponse.then(function(regResponse){
+    console.log(regResponse);  
 }).catch((error)=>{
     console.log(error); 
 });
@@ -29,35 +34,20 @@ regResponse.then(function(result){
 
 //Login Object
 var uld = new UserLogInDTO();
-uld.email=urd.email;
-uld.password=urd.password;
-let acressult = authService.login(uld.email,uld.password);//ac.login2(uld);
-acressult.then((ResponseObj)=>{
-     console.log(ResponseObj.message); 
-
-    authService.authenticate(ResponseObj.result.token).then((t)=>{ //Authenticate User
-        console.log(t.message); 
+uld.email=some_email; 
+uld.password=some_password;
+let login1 = authService.login(uld.email,uld.password);
+// let login2 = authService.login2(uld);
+login1.then((regResponse)=>{
+     console.log(regResponse); 
+    //  console.log(ResponseObj.message); 
+    authService.authenticate(regResponse.result.token).then((regResponse2)=>{ //Authenticate User
+        console.log(regResponse2); 
+        // console.log(regResponse2.message); 
      }).catch((error)=>{
         console.log(error);
      });
-
 }).catch((error)=>{
         console.log(error); 
     });
 
-// Registration Object
-console.log("Registered New User")
-var urd2 =new UserRegistrationDTO();
-urd2.email="newuserd@mail.com";
-urd2.firstname="newuser";
-urd2.lastname="newuser"; 
-urd2.password="SomePassword123";
-urd2.passwordconfirm="SomePassword123";
-urd2.phone="111888999";
-regResponse = authService.register(urd2);//("1test@test.com","passtoHash");
-regResponse.then(function(result){
-    console.log("Registration successful............");  
-    console.log(result.message);  
-}).catch((error)=>{
-    console.log(error); 
-});

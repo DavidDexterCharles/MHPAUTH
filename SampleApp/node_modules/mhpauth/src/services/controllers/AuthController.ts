@@ -40,7 +40,9 @@ export class AuthController  {
         }
         try {
             var s = new repos.userRepository();
+            // console.log(accountDetails.email +"-================================================");
             const result =await s.getuserByEmail(accountDetails.email);//(username);
+            // console.log(result);
             if(!result){
                 throw  new Error("Login Failed Invalid Username or Password");// intentionally Not letting user no whether the user exists or not to deter exploits
             }
@@ -111,6 +113,7 @@ export class AuthController  {
                 urdto.lockoutend=null;
                 var user = db.user.build(urdto).toJSON();
                 const result = await s.updateuser(user,user.id);
+                return true;
             }
             else{
                 return false;

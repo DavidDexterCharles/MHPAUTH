@@ -43,6 +43,7 @@ describe('AuthController Functionality', () => {
       expect(regResponse.IsSuccess).toBe(true);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);
       shared_user=regResponse.result.UserResponseDTO;
+      console.log(regResponse);
     });
     
   });
@@ -61,6 +62,7 @@ describe('AuthController Functionality', () => {
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);//UserResponseDTO implies sucess response
       shared_user = regResponse.result;
+      console.log(regResponse);
     });
   });
   describe('Test Authenticate', () => {
@@ -75,7 +77,7 @@ describe('AuthController Functionality', () => {
       expect(regResponse).toBeInstanceOf(ResponseObj);
       expect(regResponse.IsSuccess).toBe(true);
       expect(regResponse.result).toBeInstanceOf(UserResponseDTO);;
-      // console.log(user.token);
+       console.log(regResponse);
     });
   });
 
@@ -121,25 +123,12 @@ describe('AuthController Functionality', () => {
                 console.log(error); 
                 expect(error).toBeInstanceOf(ResponseObj)
                 expect(error.IsSuccess).toBe(false)
-                expect(error.message).toMatch(new RegExp('Incorrect password'))
-                // expect(error).toMatchObject(
-                // {
-                //     details: new RegExp('Invalid payload provided'),
-                // })
-            });
-            const throwingFunction4 = () => ac.login(uld.email,uld.password)// on thiss 4th Login attempt the user account would be locked and this would be visible in the database
-            await throwingFunction4().catch(error => 
-            {
-                console.log("444444444444444444444444444444444444444444444444444444444"); 
-                console.log(error); 
-                expect(error).toBeInstanceOf(ResponseObj)
-                expect(error.IsSuccess).toBe(false)
                 expect(error.message).toMatch(new RegExp('Account Locked for 20 minutes and will be reavailable after...'))
                 // expect(error).toMatchObject(
                 // {
                 //     details: new RegExp('Invalid payload provided'),
                 // })
-            })
+            });
          })
       });
 });

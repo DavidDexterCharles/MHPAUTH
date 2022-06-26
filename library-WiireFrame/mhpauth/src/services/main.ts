@@ -1,5 +1,5 @@
-import {AuthController,UserRegistrationDTO,/*userRepository,*/ResponseObj,UserResponseDTO, UserLogInDTO}  from 'mhpauth';
-
+import {AuthController}  from './index'
+import {UserRegistrationDTO,UserLogInDTO} from './DTOS/APIDTO';
 
 var authService = new AuthController();
 
@@ -9,7 +9,7 @@ var authService = new AuthController();
 
 let regResponse;
 
-let some_email="som@mail.com";
+let some_email="bv7A94@mail.com";
 let some_password="SomePassword123";
 let some_firstname="sfname";
 let some_lastname="slname";

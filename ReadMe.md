@@ -152,9 +152,9 @@ CREATE TABLE `user` (
  "scripts": {
     "test": "env NODE_ENV=test jest ",
     "start": "env NODE_ENV=development nodemon main.ts",
-    "devenv":"env NODE_ENV=development nodemon main.ts",
-    "testenv":"env NODE_ENV=test nodemon main.ts",
-    "prodenv":"env NODE_ENV=production nodemon main.ts"    
+    "dev-env": "env NODE_ENV=development nodemon main.ts",
+    "test-env": "env NODE_ENV=test nodemon main.ts",
+    "prod-env": "env NODE_ENV=production nodemon main.ts"   
   },
 ```
 # Brief on `.env`
@@ -237,9 +237,9 @@ Command Listing for quick reference :
  "scripts": {
     "test": "env NODE_ENV=test jest ",
     "start": "env NODE_ENV=development nodemon main.ts",
-    "devenv":"env NODE_ENV=development nodemon main.ts",
-    "testenv":"env NODE_ENV=test nodemon main.ts",
-    "prodenv":"env NODE_ENV=production nodemon main.ts"    
+    "dev-env": "env NODE_ENV=development nodemon main.ts",
+    "test-env": "env NODE_ENV=test nodemon main.ts",
+    "prod-env": "env NODE_ENV=production nodemon main.ts"    
   },
 ```
 ## Regarding running and testing, all commands should be assumed to have been executed in the following directory **\MHPAUTH\SampleApp**

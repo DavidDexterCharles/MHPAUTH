@@ -4,5 +4,11 @@ The WireFrame folders
 library-WireFrame and SampleApp-WireFrame folders were based on an older set of commits and hence were missing test, and referencing old code
 
 Third attempt wrong error message (tests also updated):
---Realised that the user was being notified as lock out after 4th attempt, i.e. at third attempt error 
-was incorrect password instead of 'Account Locked for 20 minutes and will be reavailable after...'
+--Realised that the user was being notified as lock out after 4th attempt instead of at third attempt, even though they were really locked out since the 3rd attempt
+ but the wrong error message at 3rd attempt was being displayed. E.G. at 3rd attempt error was incorrect password instead of 'Account Locked for 20 minutes...'
+
+\MHPAUTH\SampleApp
+|> In the above directory  main.ts can also run using the following command ts-node .\main.ts [may have to use terminal in admin mode]
+	|> this might be preferable/alternative option for running instead of using default nodemon
+|> main.ts have been cleaned up to run two functions and variables were added to the top of file to make editing commands easier
+|> npm start has been switcheed to run on test environment by default instead of dev environment, since the automated test data populates myhealthpasstest.user

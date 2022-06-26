@@ -40,7 +40,9 @@ export class AuthController  {
         }
         try {
             var s = new repos.userRepository();
+            // console.log(accountDetails.email +"-================================================");
             const result =await s.getuserByEmail(accountDetails.email);//(username);
+            // console.log(result);
             if(!result){
                 throw  new Error("Login Failed Invalid Username or Password");// intentionally Not letting user no whether the user exists or not to deter exploits
             }
@@ -69,7 +71,10 @@ export class AuthController  {
             if (!passMatch) {
                 var u = await this.incrementFailedAccess(urdto);
                 urdto=u;
-                throw  new Error( "Incorrect password");
+                if (u.accessfailedcount>=3)
+                    throw  new Error(`Account Locked for 20 minutes and will be reavailable after ${lockoutend}`);
+                else
+                    throw  new Error( "Incorrect password");
             }
             else{
                 if(accessfailedcount>0)
@@ -108,6 +113,7 @@ export class AuthController  {
                 urdto.lockoutend=null;
                 var user = db.user.build(urdto).toJSON();
                 const result = await s.updateuser(user,user.id);
+                return true;
             }
             else{
                 return false;

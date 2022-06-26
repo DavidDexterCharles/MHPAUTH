@@ -13,8 +13,11 @@
   "scripts": {
     "build": "npx tsc",
     "clean": "tsc --build --clean",
-    "test": "env NODE_ENV=test jest --coverage --watchAll --verbose",
-    "start": "env NODE_ENV=development nodemon ./src/services/example.ts"
+    "test": "env NODE_ENV=test jest --coverage",
+    "start": "env NODE_ENV=development nodemon ./src/services/main.ts",
+    "dev-env": "env NODE_ENV=development nodemon ./src/services/main.ts",
+    "test-env": "env NODE_ENV=test nodemon ./src/services/main.ts",
+    "prod-env": "env NODE_ENV=production nodemon ./src/services/main.ts"
   },
   "devDependencies": {
     "@types/jest": "^28.1.2",
