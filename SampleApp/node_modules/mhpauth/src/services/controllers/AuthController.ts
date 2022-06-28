@@ -222,8 +222,10 @@ export class AuthController  {
                     throw failureResponse(validation.errors[0],"Password does not satisfy requirements");
                 }
                 uregdto.password=await bcrypt.hash(password, 12);
-                var user = db.user.build(uregdto).toJSON();
-                await s.updateuser(user,id);
+                existinguser.password = await bcrypt.hash(password, 12);
+                existinguser.save();//fixed the save
+                // var user = db.user.build(uregdto).toJSON();
+                // await s.updateuser(user,id);
                 // console.log(uregdto);
                 return successResponse(urdto,"PasswordReset Completed Sucessfully");
             }

@@ -212,8 +212,10 @@ class AuthController {
                         throw (0, APIDTO_1.failureResponse)(validation.errors[0], "Password does not satisfy requirements");
                     }
                     uregdto.password = yield bcrypt.hash(password, 12);
-                    var user = db.user.build(uregdto).toJSON();
-                    yield s.updateuser(user, id);
+                    existinguser.password = yield bcrypt.hash(password, 12);
+                    existinguser.save(); //fixed the save
+                    // var user = db.user.build(uregdto).toJSON();
+                    // await s.updateuser(user,id);
                     // console.log(uregdto);
                     return (0, APIDTO_1.successResponse)(urdto, "PasswordReset Completed Sucessfully");
                 }
