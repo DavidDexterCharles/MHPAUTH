@@ -139,7 +139,7 @@ describe('AuthController Functionality', () => {
     describe('Test User Lock Out', () => 
     {
       let ac:AuthController;//AuthController
-      ac = new AuthController();
+      ac = new AuthController(1);
         it("Should lock existing user out after 3 failed password attempts", async () => 
         {
             expect.assertions(9);//9 because each expect is an assertion within this it block

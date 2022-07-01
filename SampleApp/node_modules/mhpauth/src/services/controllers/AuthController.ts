@@ -9,7 +9,10 @@ require('dotenv').config();
 import {ResponseObj,successResponse,failureResponse,UserResponseDTO,UserRegistrationDTO,UserLogInDTO,isValidDTO} from '../DTOS/APIDTO';
 
 export class AuthController  {
-
+    public a:any;
+    constructor(atime:number=20){
+        this.a=atime;
+    }
     public async login(username:string, password:string):Promise<ResponseObj>// to match with official interface, recommend use for login2 however
     {
         try 
@@ -130,7 +133,7 @@ export class AuthController  {
         urdto.accessfailedcount = urdto.accessfailedcount+1;
         if(urdto.accessfailedcount>=3){
             var current_timestamp = moment().toDate();
-            urdto.lockoutend = moment(current_timestamp).add(20, 'm').toDate();
+            urdto.lockoutend = moment(current_timestamp).add(this.a, 'm').toDate();
         }
         var user = db.user.build(urdto).toJSON();
         const result = await s.updateuser(user,user.id);
