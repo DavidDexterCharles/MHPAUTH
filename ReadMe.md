@@ -1,4 +1,4 @@
-# Library Usage Guide 
+# Library Usage Guide [Case Exercise - Software Engineer]
 
 ## Please see [Summary/Quick Overview](https://github.com/DavidDexterCharles/MHPAUTH/blob/master/DocumentationSimpler.pdf) for main points on using the library.
 
